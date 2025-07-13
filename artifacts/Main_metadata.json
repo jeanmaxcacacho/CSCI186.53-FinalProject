@@ -4,26 +4,7 @@
 	},
 	"language": "Solidity",
 	"output": {
-		"abi": [
-			{
-				"inputs": [],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
-				"inputs": [],
-				"name": "helloWorld",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "pure",
-				"type": "function"
-			}
-		],
+		"abi": [],
 		"devdoc": {
 			"kind": "dev",
 			"methods": {},
@@ -52,10 +33,11 @@
 	},
 	"sources": {
 		"Main.sol": {
-			"keccak256": "0x1d8bad78fe5b7be099c9afe231f55ae4425caddc6a93e3ad1772aaf6841145de",
+			"keccak256": "0x0ecaac943b2b6a0650bc2d8e28d1803c69c485842975acd27c220bd203b3c823",
+			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://236a58f8c351e49533cfd90606946b42dfb15cc149dd69d5733567c88d0430d2",
-				"dweb:/ipfs/QmSZsjPYWjgjyWLo433WsuvKWB3LkVuLq3QLXsJ17Yz4TD"
+				"bzz-raw://74b8382fd187d7df1c8bb0331e97f5298c67ebf699af151bf1999bbbbbc06599",
+				"dweb:/ipfs/QmSGV4Bp6UBouNFqZrFTUYU82aq3BuWibCLVkFxLe3zhGv"
 			]
 		}
 	},
