@@ -1,6 +1,65 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.2;
 
-contract Main {
+/*
+    Campaign creation should provide the necessary constructs
+    to support: (i) accepting donations, (ii) withdrawal requests.
+    
+    FactoryContract where ChildContracts are the campaigns and the
+    factory itself is the 'platform.'
+*/
 
+contract CampaignFactory {
+
+    address[] public deployedCampaigns;
+    
+    event CampaignCreated(address campaignAddress, address creator);
+
+    function createCampaign(string memory _campaignName) public {
+        Campaign newCampaign = new Campaign(msg.sender, _campaignName);
+        deployedCampaigns.push(address(newCampaign));
+
+        emit CampaignCreated(address(newCampaign), msg.sender);
+    }
+
+    function getDeployedCampaigns() public view returns (address[] memory) {
+        return deployedCampaigns;
+    }
+
+}
+
+contract Campaign {
+    address public creator;
+    string public campaignName;
+    mapping(address => uint256) public donorContributions;
+    address[] public approvers;
+    uint256 totalDonations;
+
+    uint256 constant APPROVER_THRESHOLD = 3e14; // if donor has given $500 in ETH, elevate privilege
+
+    constructor(address _creator, string memory _campaignName) {
+        creator = _creator;
+        campaignName = _campaignName;
+        approvers.push(_creator); // creator is automatically an approver
+    }
+
+
+    receive() external payable {
+        // put the donate function here
+    }
+
+    // see current contract balance, total amt of donations ever, approver amount, creator address
+    function getSummary() public view returns (
+        uint256,
+        uint256,
+        uint256,
+        address
+    ) {
+        return (
+            address(this).balance,
+            totalDonations,
+            approvers.length,
+            creator
+        );
+    }
 }
