@@ -1,3 +1,4 @@
+@ -1,6 +1,65 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.2;
 
@@ -35,6 +36,9 @@ contract Campaign {
     address[] public approvers;
     uint256 totalDonations;
 
+    event DonationReceived(address donor, uint256 amount);
+    event NewApprover(address approver);
+
     uint256 constant APPROVER_THRESHOLD = 3e14; // if donor has given $500 in ETH, elevate privilege
 
     constructor(address _creator, string memory _campaignName) {
@@ -43,9 +47,31 @@ contract Campaign {
         approvers.push(_creator); // creator is automatically an approver
     }
 
-
+    // donation
     receive() external payable {
-        // put the donate function here
+         require(msg.value > 0, "Donation amount must be greater than 0");
+        
+        // Update donor's total contributions
+        donorContributions[msg.sender] += msg.value;
+        totalDonations += msg.value;
+        
+        // Check if donor qualifies as approver
+        if (donorContributions[msg.sender] >= APPROVER_THRESHOLD && !isApprover(msg.sender)) {
+            approvers.push(msg.sender);
+            emit NewApprover(msg.sender);
+        }
+        
+        emit DonationReceived(msg.sender, msg.value);
+    }
+
+    // Helper function to check if address is already an approver
+    function isApprover(address _address) public view returns (bool) {
+        for (uint i = 0; i < approvers.length; i++) {
+            if (approvers[i] == _address) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // see current contract balance, total amt of donations ever, approver amount, creator address
