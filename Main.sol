@@ -1,4 +1,3 @@
-@ -1,6 +1,65 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.2;
 
@@ -49,13 +48,17 @@ contract Campaign {
 
     // donation
     receive() external payable {
-         require(msg.value > 0, "Donation amount must be greater than 0");
+        donate();
+    }
+
+    function donate() public payable {
+        require(msg.value > 0, "Donation must contain some amount of ether");
         
-        // Update donor's total contributions
+        // update donor's total contributions
         donorContributions[msg.sender] += msg.value;
         totalDonations += msg.value;
         
-        // Check if donor qualifies as approver
+        // check if donor qualifies as approver
         if (donorContributions[msg.sender] >= APPROVER_THRESHOLD && !isApprover(msg.sender)) {
             approvers.push(msg.sender);
             emit NewApprover(msg.sender);
@@ -64,7 +67,7 @@ contract Campaign {
         emit DonationReceived(msg.sender, msg.value);
     }
 
-    // Helper function to check if address is already an approver
+    // check if address is already an approver
     function isApprover(address _address) public view returns (bool) {
         for (uint i = 0; i < approvers.length; i++) {
             if (approvers[i] == _address) {

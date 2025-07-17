@@ -22,6 +22,38 @@
 				"type": "constructor"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "donor",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "DonationReceived",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "approver",
+						"type": "address"
+					}
+				],
+				"name": "NewApprover",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -64,6 +96,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "donate",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -114,6 +153,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "isApprover",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"stateMutability": "payable",
 				"type": "receive"
 			}
@@ -146,11 +204,11 @@
 	},
 	"sources": {
 		"Main.sol": {
-			"keccak256": "0x54881136063bb0ae8082518c4a716c23a8a7c989688e0cc78a7a4831905ba0d7",
+			"keccak256": "0xce9c3275a7e2da45bdeb62c574a9c047cb61d0ec0fb3d3dc3008975216d976d8",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://24de59ee40b1317695cc1603479f6a1356677738910c8828a4d2e0024c21d47a",
-				"dweb:/ipfs/QmTgsjyuQW6Zt1w5p9g7LBZoBFtdRvcp4zWdPTigYddKqw"
+				"bzz-raw://b90246bf1a5a3c6c5e49e0389015df69f7d2ceee5c84d2fd7a5d3aa41423de30",
+				"dweb:/ipfs/QmNtxPG9TSYZ2P9CEEdwEKLjZ7gp2AsXXWh4qnKn7bMddm"
 			]
 		}
 	},
