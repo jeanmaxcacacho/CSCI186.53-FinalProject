@@ -38,6 +38,10 @@ contract Campaign {
     event DonationReceived(address donor, uint256 amount);
     event NewApprover(address approver);
 
+    event RequestCreated(string description, address recipient, uint256 amount); 
+    event RequestApproved(uint index, address approver); 
+    event RequestFinalized(uint index); 
+
     uint256 constant APPROVER_THRESHOLD = 3e14; // if donor has given $500 in ETH, elevate privilege
 
     constructor(address _creator, string memory _campaignName) {
@@ -75,6 +79,63 @@ contract Campaign {
             }
         }
         return false;
+    }
+
+    // only approvers
+    modifier onlyApprover() {
+            require(isApprover(msg.sender), "Only approvers allowed");
+            _;
+        }
+
+    // 
+    struct Request {
+        string description;
+        address payable recipient;
+        uint amount;
+        bool completed;
+        uint approvalCount;
+        mapping(address => bool) approvedBy;
+    }
+    
+    Request[] public requests;
+
+    // create a request
+    function createRequest(string memory description, address payable recipient, uint amount) public onlyApprover {
+        require(amount <= address(this).balance, "Not enough funds");
+        require(amount <= donorContributions[msg.sender], "Cannot request more than the amount of your donation");
+
+        Request storage request = requests.push();
+        request.description = description;
+        request.recipient = recipient;
+        request.amount = amount;
+        request.completed = false;
+        request.approvalCount = 0;
+
+        emit RequestCreated(description, recipient, amount);
+    }
+
+    // approve a request (one vote per approver)
+    function approveRequest(uint index) public onlyApprover {
+        Request storage request = requests[index];
+        require(!request.approvedBy[msg.sender], "Already voted");
+        require(!request.completed, "This withdrawal has already been finalized.");
+
+        request.approvedBy[msg.sender] = true;
+        request.approvalCount++;
+
+        emit RequestApproved(index, msg.sender);
+    }
+
+    // finalize a request after 50% approval
+    function finalizeRequest(uint index) public onlyApprover {
+        Request storage request = requests[index];
+        require(!request.completed, "Withdrawal Request already Completed");
+        require(request.approvalCount > approvers.length / 2, "50% of the approvers have not yet agreed to making a withdrawal request.");
+
+        request.completed = true;
+        request.recipient.transfer(request.amount);
+
+        emit RequestFinalized(index);
     }
 
     // see current contract balance, total amt of donations ever, approver amount, creator address
